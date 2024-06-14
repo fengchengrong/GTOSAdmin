@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.invite.mapper.InviteCodesMapper">
+    
+    <resultMap type="InviteCodes" id="InviteCodesResult">
+        <result property="inviteCode"    column="invite_code"    />
+        <result property="phone"    column="phone"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="usedCount"    column="used_count"    />
+        <result property="moneys"    column="moneys"    />
+        <result property="monthMoneys"    column="month_moneys"    />
+        <result property="collectMoneys"    column="collect_moneys"    />
+        <result property="ratio"    column="ratio"    />
+    </resultMap>
+
+    <sql id="selectInviteCodesVo">
+        select invite_code, phone, create_time, used_count, moneys, month_moneys, collect_moneys, ratio from invite_codes
+    </sql>
+
+    <select id="selectInviteCodesList" parameterType="InviteCodes" resultMap="InviteCodesResult">
+        <include refid="selectInviteCodesVo"/>
+        <where>  
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="usedCount != null "> and used_count = #{usedCount}</if>
+            <if test="moneys != null "> and moneys = #{moneys}</if>
+            <if test="monthMoneys != null "> and month_moneys = #{monthMoneys}</if>
+            <if test="collectMoneys != null "> and collect_moneys = #{collectMoneys}</if>
+            <if test="ratio != null "> and ratio = #{ratio}</if>
+        </where>
+    </select>
+    
+    <select id="selectInviteCodesByInviteCode" parameterType="String" resultMap="InviteCodesResult">
+        <include refid="selectInviteCodesVo"/>
+        where invite_code = #{inviteCode}
+    </select>
+
+    <insert id="insertInviteCodes" parameterType="InviteCodes">
+        insert into invite_codes
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="inviteCode != null">invite_code,</if>
+            <if test="phone != null and phone != ''">phone,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="usedCount != null">used_count,</if>
+            <if test="moneys != null">moneys,</if>
+            <if test="monthMoneys != null">month_moneys,</if>
+            <if test="collectMoneys != null">collect_moneys,</if>
+            <if test="ratio != null">ratio,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="inviteCode != null">#{inviteCode},</if>
+            <if test="phone != null and phone != ''">#{phone},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="usedCount != null">#{usedCount},</if>
+            <if test="moneys != null">#{moneys},</if>
+            <if test="monthMoneys != null">#{monthMoneys},</if>
+            <if test="collectMoneys != null">#{collectMoneys},</if>
+            <if test="ratio != null">#{ratio},</if>
+         </trim>
+    </insert>
+
+    <update id="updateInviteCodes" parameterType="InviteCodes">
+        update invite_codes
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="usedCount != null">used_count = #{usedCount},</if>
+            <if test="moneys != null">moneys = #{moneys},</if>
+            <if test="monthMoneys != null">month_moneys = #{monthMoneys},</if>
+            <if test="collectMoneys != null">collect_moneys = #{collectMoneys},</if>
+            <if test="ratio != null">ratio = #{ratio},</if>
+        </trim>
+        where invite_code = #{inviteCode}
+    </update>
+
+    <delete id="deleteInviteCodesByInviteCode" parameterType="String">
+        delete from invite_codes where invite_code = #{inviteCode}
+    </delete>
+
+    <delete id="deleteInviteCodesByInviteCodes" parameterType="String">
+        delete from invite_codes where invite_code in 
+        <foreach item="inviteCode" collection="array" open="(" separator="," close=")">
+            #{inviteCode}
+        </foreach>
+    </delete>
+</mapper>
