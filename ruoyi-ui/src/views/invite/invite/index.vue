@@ -1,7 +1,15 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="代理商电话" prop="phone">
+      <el-form-item label="代理编号" prop="phone">
+        <el-input
+          v-model="queryParams.inviteCode"
+          placeholder="请输入代理编号"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="代理电话" prop="phone">
         <el-input
           v-model="queryParams.phone"
           placeholder="请输入代理商电话"
@@ -33,7 +41,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="未支付金额" prop="collectMoneys">
+      <el-form-item label="未付金额" prop="collectMoneys">
         <el-input
           v-model="queryParams.collectMoneys"
           placeholder="请输入未支付金额"
@@ -63,7 +71,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['invite:invite:add']"
+          v-hasPermi="['invite:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -74,7 +82,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['invite:invite:edit']"
+          v-hasPermi="['invite:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -85,7 +93,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['invite:invite:remove']"
+          v-hasPermi="['invite:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -95,7 +103,7 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['invite:invite:export']"
+          v-hasPermi="['invite:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -103,12 +111,12 @@
 
     <el-table v-loading="loading" :data="inviteList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="代理商编号" align="center" prop="inviteCode" />
-      <el-table-column label="代理商电话" align="center" prop="phone" />
+      <el-table-column label="代理编号" align="center" prop="inviteCode" />
+      <el-table-column label="代理电话" align="center" prop="phone" />
       <el-table-column label="用户数量" align="center" prop="usedCount" />
       <el-table-column label="总收益" align="center" prop="moneys" />
       <el-table-column label="月收益" align="center" prop="monthMoneys" />
-      <el-table-column label="未支付金额" align="center" prop="collectMoneys" />
+      <el-table-column label="未付金额" align="center" prop="collectMoneys" />
       <el-table-column label="支付比例" align="center" prop="ratio" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -117,19 +125,19 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['invite:invite:edit']"
+            v-hasPermi="['invite:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['invite:invite:remove']"
+            v-hasPermi="['invite:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -141,8 +149,11 @@
     <!-- 添加或修改代理商信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="代理商电话" prop="phone">
-          <el-input v-model="form.phone" placeholder="请输入代理商电话" />
+        <el-form-item label="代理编号" prop="inviteCode">
+          <el-input v-model="form.inviteCode" placeholder="请输入代理编号" />
+        </el-form-item>
+        <el-form-item label="代理电话" prop="phone">
+          <el-input v-model="form.phone" placeholder="请输入代理电话" />
         </el-form-item>
         <el-form-item label="用户数量" prop="usedCount">
           <el-input v-model="form.usedCount" placeholder="请输入用户数量" />
@@ -153,8 +164,8 @@
         <el-form-item label="月收益" prop="monthMoneys">
           <el-input v-model="form.monthMoneys" placeholder="请输入月收益" />
         </el-form-item>
-        <el-form-item label="未支付金额" prop="collectMoneys">
-          <el-input v-model="form.collectMoneys" placeholder="请输入未支付金额" />
+        <el-form-item label="未付金额" prop="collectMoneys">
+          <el-input v-model="form.collectMoneys" placeholder="请输入未付金额" />
         </el-form-item>
         <el-form-item label="支付比例" prop="ratio">
           <el-input v-model="form.ratio" placeholder="请输入支付比例" />
@@ -197,6 +208,7 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
+        inviteCode: null,
         phone: null,
         usedCount: null,
         moneys: null,
@@ -208,8 +220,11 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        inviteCode: [
+          { required: true, message: "代理编号不能为空", trigger: "blur" }
+        ],
         phone: [
-          { required: true, message: "代理商电话不能为空", trigger: "blur" }
+          { required: true, message: "代理电话不能为空", trigger: "blur" }
         ],
         createTime: [
           { required: true, message: "创建时间不能为空", trigger: "blur" }
@@ -224,7 +239,7 @@ export default {
           { required: true, message: "月收益不能为空", trigger: "blur" }
         ],
         collectMoneys: [
-          { required: true, message: "未支付金额不能为空", trigger: "blur" }
+          { required: true, message: "未付金额不能为空", trigger: "blur" }
         ],
         ratio: [
           { required: true, message: "支付比例不能为空", trigger: "blur" }
@@ -319,7 +334,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const inviteCodes = row.inviteCode || this.ids;
-      this.$modal.confirm('是否确认删除代理商信息编号为"' + inviteCodes + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除代理信息编号为"' + inviteCodes + '"的数据项？').then(function() {
         return delInvite(inviteCodes);
       }).then(() => {
         this.getList();

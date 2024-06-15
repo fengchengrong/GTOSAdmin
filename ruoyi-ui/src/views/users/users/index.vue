@@ -1,6 +1,14 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+      <el-form-item label="手机号" prop="userName">
+        <el-input
+          v-model="queryParams.phoneNumber"
+          placeholder="请输入手机号"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="用户名" prop="userName">
         <el-input
           v-model="queryParams.userName"
@@ -9,14 +17,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="密码" prop="password">
-        <el-input
-          v-model="queryParams.password"
-          placeholder="请输入密码"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+<!--      <el-form-item label="密码" prop="password">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.password"-->
+<!--          placeholder="请输入密码"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
       <el-form-item label="是否邀请" prop="isInvite">
         <el-select v-model="queryParams.isInvite" placeholder="请选择是否邀请" clearable>
           <el-option
@@ -27,30 +35,30 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="注册日期" prop="registerTime">
-        <el-date-picker clearable
-          v-model="queryParams.registerTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择注册日期">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="上次登录时间" prop="lastLoginTime">
-        <el-date-picker clearable
-          v-model="queryParams.lastLoginTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择上次登录时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="有效期" prop="vipTime">
-        <el-date-picker clearable
-          v-model="queryParams.vipTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择有效期">
-        </el-date-picker>
-      </el-form-item>
+<!--      <el-form-item label="注册日期" prop="registerTime">-->
+<!--        <el-date-picker clearable-->
+<!--          v-model="queryParams.registerTime"-->
+<!--          type="date"-->
+<!--          value-format="yyyy-MM-dd"-->
+<!--          placeholder="请选择注册日期">-->
+<!--        </el-date-picker>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="上次登录时间" prop="lastLoginTime">-->
+<!--        <el-date-picker clearable-->
+<!--          v-model="queryParams.lastLoginTime"-->
+<!--          type="date"-->
+<!--          value-format="yyyy-MM-dd"-->
+<!--          placeholder="请选择上次登录时间">-->
+<!--        </el-date-picker>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="有效期" prop="vipTime">-->
+<!--        <el-date-picker clearable-->
+<!--          v-model="queryParams.vipTime"-->
+<!--          type="date"-->
+<!--          value-format="yyyy-MM-dd"-->
+<!--          placeholder="请选择有效期">-->
+<!--        </el-date-picker>-->
+<!--      </el-form-item>-->
       <el-form-item label="所属代理" prop="inviteCode">
         <el-input
           v-model="queryParams.inviteCode"
@@ -83,7 +91,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['users:users:add']"
+          v-hasPermi="['users:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -94,7 +102,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['users:users:edit']"
+          v-hasPermi="['users:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -105,7 +113,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['users:users:remove']"
+          v-hasPermi="['users:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -115,7 +123,7 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['users:users:export']"
+          v-hasPermi="['users:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -125,7 +133,7 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="手机号" align="center" prop="phoneNumber" />
       <el-table-column label="用户名" align="center" prop="userName" />
-      <el-table-column label="密码" align="center" prop="password" />
+<!--      <el-table-column label="密码" align="center" prop="password" />-->
       <el-table-column label="是否邀请" align="center" prop="isInvite">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.yes_no" :value="scope.row.isInvite"/>
@@ -136,11 +144,11 @@
           <span>{{ parseTime(scope.row.registerTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="上次登录时间" align="center" prop="lastLoginTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.lastLoginTime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
+<!--      <el-table-column label="上次登录时间" align="center" prop="lastLoginTime" width="180">-->
+<!--        <template slot-scope="scope">-->
+<!--          <span>{{ parseTime(scope.row.lastLoginTime, '{y}-{m}-{d}') }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <el-table-column label="有效期" align="center" prop="vipTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.vipTime, '{y}-{m}-{d}') }}</span>
@@ -160,19 +168,19 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['users:users:edit']"
+            v-hasPermi="['users:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['users:users:remove']"
+            v-hasPermi="['users:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -184,12 +192,15 @@
     <!-- 添加或修改用户信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form-item label="手机号" prop="phoneNumber">
+          <el-input v-model="form.phoneNumber" placeholder="请输入手机号" />
+        </el-form-item>
         <el-form-item label="用户名" prop="userName">
           <el-input v-model="form.userName" placeholder="请输入用户名" />
         </el-form-item>
-        <el-form-item label="密码" prop="password">
-          <el-input v-model="form.password" placeholder="请输入密码" />
-        </el-form-item>
+<!--        <el-form-item label="密码" prop="password">-->
+<!--          <el-input v-model="form.password" placeholder="请输入密码" />-->
+<!--        </el-form-item>-->
         <el-form-item label="是否邀请" prop="isInvite">
           <el-radio-group v-model="form.isInvite">
             <el-radio
@@ -275,6 +286,7 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
+        phoneNumber:null,
         userName: null,
         password: null,
         isInvite: null,
@@ -289,6 +301,9 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        phoneNumber: [
+          { required: true, message: "手机号不能为空", trigger: "blur" }
+        ],
         userName: [
           { required: true, message: "用户名不能为空", trigger: "blur" }
         ],

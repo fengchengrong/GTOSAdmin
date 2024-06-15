@@ -23,12 +23,12 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 代理商信息Controller
- * 
+ *
  * @author fengcr
  * @date 2024-06-14
  */
 @RestController
-@RequestMapping("/invite/invite")
+@RequestMapping("/invite")
 public class InviteCodesController extends BaseController
 {
     @Autowired
@@ -37,7 +37,7 @@ public class InviteCodesController extends BaseController
     /**
      * 查询代理商信息列表
      */
-    @PreAuthorize("@ss.hasPermi('invite:invite:list')")
+    @PreAuthorize("@ss.hasPermi('invite:list')")
     @GetMapping("/list")
     public TableDataInfo list(InviteCodes inviteCodes)
     {
@@ -49,7 +49,7 @@ public class InviteCodesController extends BaseController
     /**
      * 导出代理商信息列表
      */
-    @PreAuthorize("@ss.hasPermi('invite:invite:export')")
+    @PreAuthorize("@ss.hasPermi('invite:export')")
     @Log(title = "代理商信息", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, InviteCodes inviteCodes)
@@ -62,7 +62,7 @@ public class InviteCodesController extends BaseController
     /**
      * 获取代理商信息详细信息
      */
-    @PreAuthorize("@ss.hasPermi('invite:invite:query')")
+    @PreAuthorize("@ss.hasPermi('invite:query')")
     @GetMapping(value = "/{inviteCode}")
     public AjaxResult getInfo(@PathVariable("inviteCode") String inviteCode)
     {
@@ -72,7 +72,7 @@ public class InviteCodesController extends BaseController
     /**
      * 新增代理商信息
      */
-    @PreAuthorize("@ss.hasPermi('invite:invite:add')")
+    @PreAuthorize("@ss.hasPermi('invite:add')")
     @Log(title = "代理商信息", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody InviteCodes inviteCodes)
@@ -83,7 +83,7 @@ public class InviteCodesController extends BaseController
     /**
      * 修改代理商信息
      */
-    @PreAuthorize("@ss.hasPermi('invite:invite:edit')")
+    @PreAuthorize("@ss.hasPermi('invite:edit')")
     @Log(title = "代理商信息", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody InviteCodes inviteCodes)
@@ -94,7 +94,7 @@ public class InviteCodesController extends BaseController
     /**
      * 删除代理商信息
      */
-    @PreAuthorize("@ss.hasPermi('invite:invite:remove')")
+    @PreAuthorize("@ss.hasPermi('invite:remove')")
     @Log(title = "代理商信息", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{inviteCodes}")
     public AjaxResult remove(@PathVariable String[] inviteCodes)
