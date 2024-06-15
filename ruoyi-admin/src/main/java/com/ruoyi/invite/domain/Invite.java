@@ -6,20 +6,24 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 代理商信息对象 invite_codes
+ * 代理信息对象 invite_codes
  * 
  * @author fengcr
- * @date 2024-06-14
+ * @date 2024-06-15
  */
-public class InviteCodes extends BaseEntity
+public class Invite extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** 代理商编号 */
+    /** 编号 */
+    private Long id;
+
+    /** 代理编号 */
+    @Excel(name = "代理编号")
     private String inviteCode;
 
-    /** 代理商电话 */
-    @Excel(name = "代理商电话")
+    /** 代理电话 */
+    @Excel(name = "代理电话")
     private String phone;
 
     /** 用户数量 */
@@ -28,20 +32,29 @@ public class InviteCodes extends BaseEntity
 
     /** 总收益 */
     @Excel(name = "总收益")
-    private Integer moneys;
+    private String moneys;
 
     /** 月收益 */
     @Excel(name = "月收益")
-    private Integer monthMoneys;
+    private String monthMoneys;
 
-    /** 未支付金额 */
-    @Excel(name = "未支付金额")
-    private Integer collectMoneys;
+    /** 未付金额 */
+    @Excel(name = "未付金额")
+    private String collectMoneys;
 
     /** 支付比例 */
     @Excel(name = "支付比例")
     private Long ratio;
 
+    public void setId(Long id) 
+    {
+        this.id = id;
+    }
+
+    public Long getId() 
+    {
+        return id;
+    }
     public void setInviteCode(String inviteCode) 
     {
         this.inviteCode = inviteCode;
@@ -69,30 +82,30 @@ public class InviteCodes extends BaseEntity
     {
         return usedCount;
     }
-    public void setMoneys(Integer moneys) 
+    public void setMoneys(String moneys) 
     {
         this.moneys = moneys;
     }
 
-    public Integer getMoneys() 
+    public String getMoneys() 
     {
         return moneys;
     }
-    public void setMonthMoneys(Integer monthMoneys) 
+    public void setMonthMoneys(String monthMoneys) 
     {
         this.monthMoneys = monthMoneys;
     }
 
-    public Integer getMonthMoneys() 
+    public String getMonthMoneys() 
     {
         return monthMoneys;
     }
-    public void setCollectMoneys(Integer collectMoneys) 
+    public void setCollectMoneys(String collectMoneys) 
     {
         this.collectMoneys = collectMoneys;
     }
 
-    public Integer getCollectMoneys() 
+    public String getCollectMoneys() 
     {
         return collectMoneys;
     }
@@ -109,6 +122,7 @@ public class InviteCodes extends BaseEntity
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
+            .append("id", getId())
             .append("inviteCode", getInviteCode())
             .append("phone", getPhone())
             .append("createTime", getCreateTime())

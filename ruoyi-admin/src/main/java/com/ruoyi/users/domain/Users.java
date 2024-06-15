@@ -11,13 +11,17 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 用户信息对象 users
  * 
  * @author fengcr
- * @date 2024-06-14
+ * @date 2024-06-15
  */
 public class Users extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
+    /** 编号 */
+    private Long id;
+
     /** 手机号 */
+    @Excel(name = "手机号")
     private String phoneNumber;
 
     /** 用户名 */
@@ -59,6 +63,15 @@ public class Users extends BaseEntity
     @Excel(name = "付费金额")
     private String moneys;
 
+    public void setId(Long id) 
+    {
+        this.id = id;
+    }
+
+    public Long getId() 
+    {
+        return id;
+    }
     public void setPhoneNumber(String phoneNumber) 
     {
         this.phoneNumber = phoneNumber;
@@ -153,6 +166,7 @@ public class Users extends BaseEntity
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
+            .append("id", getId())
             .append("phoneNumber", getPhoneNumber())
             .append("userName", getUserName())
             .append("password", getPassword())

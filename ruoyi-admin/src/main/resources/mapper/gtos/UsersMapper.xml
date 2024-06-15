@@ -5,6 +5,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.ruoyi.users.mapper.UsersMapper">
     
     <resultMap type="Users" id="UsersResult">
+        <result property="id"    column="id"    />
         <result property="phoneNumber"    column="phone_number"    />
         <result property="userName"    column="user_name"    />
         <result property="password"    column="password"    />
@@ -18,33 +19,34 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectUsersVo">
-        select phone_number, user_name, password, is_invite, register_time, last_login_time, vip_time, invite_code, permissions, moneys from users
+        select id, phone_number, user_name, password, is_invite, register_time, last_login_time, vip_time, invite_code, permissions, moneys from users
     </sql>
 
     <select id="selectUsersList" parameterType="Users" resultMap="UsersResult">
         <include refid="selectUsersVo"/>
         <where>  
+            <if test="phoneNumber != null  and phoneNumber != ''"> and phone_number like concat('%', #{phoneNumber}, '%')</if>
             <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
             <if test="password != null  and password != ''"> and password = #{password}</if>
             <if test="isInvite != null "> and is_invite = #{isInvite}</if>
-            <if test="registerTime != null "> and register_time = #{registerTime}</if>
-            <if test="lastLoginTime != null "> and last_login_time = #{lastLoginTime}</if>
-            <if test="vipTime != null "> and vip_time = #{vipTime}</if>
+            <if test="params.beginRegisterTime != null and params.beginRegisterTime != '' and params.endRegisterTime != null and params.endRegisterTime != ''"> and register_time between #{params.beginRegisterTime} and #{params.endRegisterTime}</if>
+            <if test="params.beginLastLoginTime != null and params.beginLastLoginTime != '' and params.endLastLoginTime != null and params.endLastLoginTime != ''"> and last_login_time between #{params.beginLastLoginTime} and #{params.endLastLoginTime}</if>
+            <if test="params.beginVipTime != null and params.beginVipTime != '' and params.endVipTime != null and params.endVipTime != ''"> and vip_time between #{params.beginVipTime} and #{params.endVipTime}</if>
             <if test="inviteCode != null  and inviteCode != ''"> and invite_code = #{inviteCode}</if>
             <if test="permissions != null  and permissions != ''"> and permissions = #{permissions}</if>
             <if test="moneys != null  and moneys != ''"> and moneys = #{moneys}</if>
         </where>
     </select>
     
-    <select id="selectUsersByPhoneNumber" parameterType="String" resultMap="UsersResult">
+    <select id="selectUsersById" parameterType="Long" resultMap="UsersResult">
         <include refid="selectUsersVo"/>
-        where phone_number = #{phoneNumber}
+        where id = #{id}
     </select>
 
-    <insert id="insertUsers" parameterType="Users">
+    <insert id="insertUsers" parameterType="Users" useGeneratedKeys="true" keyProperty="id">
         insert into users
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="phoneNumber != null">phone_number,</if>
+            <if test="phoneNumber != null and phoneNumber != ''">phone_number,</if>
             <if test="userName != null and userName != ''">user_name,</if>
             <if test="password != null and password != ''">password,</if>
             <if test="isInvite != null">is_invite,</if>
@@ -53,10 +55,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="vipTime != null">vip_time,</if>
             <if test="inviteCode != null">invite_code,</if>
             <if test="permissions != null and permissions != ''">permissions,</if>
-            <if test="moneys != null and moneys != ''">moneys,</if>
+            <if test="moneys != null">moneys,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="phoneNumber != null">#{phoneNumber},</if>
+            <if test="phoneNumber != null and phoneNumber != ''">#{phoneNumber},</if>
             <if test="userName != null and userName != ''">#{userName},</if>
             <if test="password != null and password != ''">#{password},</if>
             <if test="isInvite != null">#{isInvite},</if>
@@ -65,13 +67,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="vipTime != null">#{vipTime},</if>
             <if test="inviteCode != null">#{inviteCode},</if>
             <if test="permissions != null and permissions != ''">#{permissions},</if>
-            <if test="moneys != null and moneys != ''">#{moneys},</if>
+            <if test="moneys != null">#{moneys},</if>
          </trim>
     </insert>
 
     <update id="updateUsers" parameterType="Users">
         update users
         <trim prefix="SET" suffixOverrides=",">
+            <if test="phoneNumber != null and phoneNumber != ''">phone_number = #{phoneNumber},</if>
             <if test="userName != null and userName != ''">user_name = #{userName},</if>
             <if test="password != null and password != ''">password = #{password},</if>
             <if test="isInvite != null">is_invite = #{isInvite},</if>
@@ -80,19 +83,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="vipTime != null">vip_time = #{vipTime},</if>
             <if test="inviteCode != null">invite_code = #{inviteCode},</if>
             <if test="permissions != null and permissions != ''">permissions = #{permissions},</if>
-            <if test="moneys != null and moneys != ''">moneys = #{moneys},</if>
+            <if test="moneys != null">moneys = #{moneys},</if>
         </trim>
-        where phone_number = #{phoneNumber}
+        where id = #{id}
     </update>
 
-    <delete id="deleteUsersByPhoneNumber" parameterType="String">
-        delete from users where phone_number = #{phoneNumber}
+    <delete id="deleteUsersById" parameterType="Long">
+        delete from users where id = #{id}
     </delete>
 
-    <delete id="deleteUsersByPhoneNumbers" parameterType="String">
-        delete from users where phone_number in 
-        <foreach item="phoneNumber" collection="array" open="(" separator="," close=")">
-            #{phoneNumber}
+    <delete id="deleteUsersByIds" parameterType="String">
+        delete from users where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
         </foreach>
     </delete>
 </mapper>

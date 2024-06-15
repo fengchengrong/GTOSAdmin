@@ -3,16 +3,16 @@ import request from '@/utils/request'
 // 查询用户信息列表
 export function listUsers(query) {
   return request({
-    url: '/users/list',
+    url: '/gtos/users/list',
     method: 'get',
     params: query
   })
 }
 
 // 查询用户信息详细
-export function getUsers(phoneNumber) {
+export function getUsers(id) {
   return request({
-    url: '/users/' + phoneNumber,
+    url: '/gtos/users/' + id,
     method: 'get'
   })
 }
@@ -20,7 +20,7 @@ export function getUsers(phoneNumber) {
 // 新增用户信息
 export function addUsers(data) {
   return request({
-    url: '/users',
+    url: '/gtos/users',
     method: 'post',
     data: data
   })
@@ -29,16 +29,16 @@ export function addUsers(data) {
 // 修改用户信息
 export function updateUsers(data) {
   return request({
-    url: '/users',
+    url: '/gtos/users',
     method: 'put',
     data: data
   })
 }
 
 // 删除用户信息
-export function delUsers(phoneNumber) {
+export function delUsers(id) {
   return request({
-    url: '/users/' + phoneNumber,
+    url: '/gtos/users/' + id,
     method: 'delete'
   })
 }

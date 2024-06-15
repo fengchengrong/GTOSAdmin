@@ -11,7 +11,7 @@ import com.ruoyi.users.service.IUsersService;
  * 用户信息Service业务层处理
  * 
  * @author fengcr
- * @date 2024-06-14
+ * @date 2024-06-15
  */
 @Service
 public class UsersServiceImpl implements IUsersService 
@@ -22,13 +22,13 @@ public class UsersServiceImpl implements IUsersService
     /**
      * 查询用户信息
      * 
-     * @param phoneNumber 用户信息主键
+     * @param id 用户信息主键
      * @return 用户信息
      */
     @Override
-    public Users selectUsersByPhoneNumber(String phoneNumber)
+    public Users selectUsersById(Long id)
     {
-        return usersMapper.selectUsersByPhoneNumber(phoneNumber);
+        return usersMapper.selectUsersById(id);
     }
 
     /**
@@ -70,24 +70,24 @@ public class UsersServiceImpl implements IUsersService
     /**
      * 批量删除用户信息
      * 
-     * @param phoneNumbers 需要删除的用户信息主键
+     * @param ids 需要删除的用户信息主键
      * @return 结果
      */
     @Override
-    public int deleteUsersByPhoneNumbers(String[] phoneNumbers)
+    public int deleteUsersByIds(Long[] ids)
     {
-        return usersMapper.deleteUsersByPhoneNumbers(phoneNumbers);
+        return usersMapper.deleteUsersByIds(ids);
     }
 
     /**
      * 删除用户信息信息
      * 
-     * @param phoneNumber 用户信息主键
+     * @param id 用户信息主键
      * @return 结果
      */
     @Override
-    public int deleteUsersByPhoneNumber(String phoneNumber)
+    public int deleteUsersById(Long id)
     {
-        return usersMapper.deleteUsersByPhoneNumber(phoneNumber);
+        return usersMapper.deleteUsersById(id);
     }
 }

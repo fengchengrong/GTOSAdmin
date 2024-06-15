@@ -7,17 +7,17 @@ import com.ruoyi.users.domain.Users;
  * 用户信息Mapper接口
  * 
  * @author fengcr
- * @date 2024-06-14
+ * @date 2024-06-15
  */
 public interface UsersMapper 
 {
     /**
      * 查询用户信息
      * 
-     * @param phoneNumber 用户信息主键
+     * @param id 用户信息主键
      * @return 用户信息
      */
-    public Users selectUsersByPhoneNumber(String phoneNumber);
+    public Users selectUsersById(Long id);
 
     /**
      * 查询用户信息列表
@@ -46,16 +46,16 @@ public interface UsersMapper
     /**
      * 删除用户信息
      * 
-     * @param phoneNumber 用户信息主键
+     * @param id 用户信息主键
      * @return 结果
      */
-    public int deleteUsersByPhoneNumber(String phoneNumber);
+    public int deleteUsersById(Long id);
 
     /**
      * 批量删除用户信息
      * 
-     * @param phoneNumbers 需要删除的数据主键集合
+     * @param ids 需要删除的数据主键集合
      * @return 结果
      */
-    public int deleteUsersByPhoneNumbers(String[] phoneNumbers);
+    public int deleteUsersByIds(Long[] ids);
 }

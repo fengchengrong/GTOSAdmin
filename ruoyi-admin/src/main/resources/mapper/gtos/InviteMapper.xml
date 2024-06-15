@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.invite.mapper.InviteMapper">
+    
+    <resultMap type="Invite" id="InviteResult">
+        <result property="id"    column="id"    />
+        <result property="inviteCode"    column="invite_code"    />
+        <result property="phone"    column="phone"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="usedCount"    column="used_count"    />
+        <result property="moneys"    column="moneys"    />
+        <result property="monthMoneys"    column="month_moneys"    />
+        <result property="collectMoneys"    column="collect_moneys"    />
+        <result property="ratio"    column="ratio"    />
+    </resultMap>
+
+    <sql id="selectInviteVo">
+        select id, invite_code, phone, create_time, used_count, moneys, month_moneys, collect_moneys, ratio from invite_codes
+    </sql>
+
+    <select id="selectInviteList" parameterType="Invite" resultMap="InviteResult">
+        <include refid="selectInviteVo"/>
+        <where>  
+            <if test="inviteCode != null  and inviteCode != ''"> and invite_code like concat('%', #{inviteCode}, '%')</if>
+            <if test="phone != null  and phone != ''"> and phone like concat('%', #{phone}, '%')</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+            <if test="params.beginUsedCount != null and params.beginUsedCount != '' and params.endUsedCount != null and params.endUsedCount != ''"> and used_count between #{params.beginUsedCount} and #{params.endUsedCount}</if>
+            <if test="params.beginMoneys != null and params.beginMoneys != '' and params.endMoneys != null and params.endMoneys != ''"> and moneys between #{params.beginMoneys} and #{params.endMoneys}</if>
+            <if test="params.beginMonthMoneys != null and params.beginMonthMoneys != '' and params.endMonthMoneys != null and params.endMonthMoneys != ''"> and month_moneys between #{params.beginMonthMoneys} and #{params.endMonthMoneys}</if>
+            <if test="collectMoneys != null  and collectMoneys != ''"> and collect_moneys = #{collectMoneys}</if>
+            <if test="ratio != null "> and ratio = #{ratio}</if>
+        </where>
+    </select>
+    
+    <select id="selectInviteById" parameterType="Long" resultMap="InviteResult">
+        <include refid="selectInviteVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertInvite" parameterType="Invite" useGeneratedKeys="true" keyProperty="id">
+        insert into invite_codes
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="inviteCode != null and inviteCode != ''">invite_code,</if>
+            <if test="phone != null and phone != ''">phone,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="usedCount != null">used_count,</if>
+            <if test="moneys != null and moneys != ''">moneys,</if>
+            <if test="monthMoneys != null and monthMoneys != ''">month_moneys,</if>
+            <if test="collectMoneys != null and collectMoneys != ''">collect_moneys,</if>
+            <if test="ratio != null">ratio,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="inviteCode != null and inviteCode != ''">#{inviteCode},</if>
+            <if test="phone != null and phone != ''">#{phone},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="usedCount != null">#{usedCount},</if>
+            <if test="moneys != null and moneys != ''">#{moneys},</if>
+            <if test="monthMoneys != null and monthMoneys != ''">#{monthMoneys},</if>
+            <if test="collectMoneys != null and collectMoneys != ''">#{collectMoneys},</if>
+            <if test="ratio != null">#{ratio},</if>
+         </trim>
+    </insert>
+
+    <update id="updateInvite" parameterType="Invite">
+        update invite_codes
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="inviteCode != null and inviteCode != ''">invite_code = #{inviteCode},</if>
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="usedCount != null">used_count = #{usedCount},</if>
+            <if test="moneys != null and moneys != ''">moneys = #{moneys},</if>
+            <if test="monthMoneys != null and monthMoneys != ''">month_moneys = #{monthMoneys},</if>
+            <if test="collectMoneys != null and collectMoneys != ''">collect_moneys = #{collectMoneys},</if>
+            <if test="ratio != null">ratio = #{ratio},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteInviteById" parameterType="Long">
+        delete from invite_codes where id = #{id}
+    </delete>
+
+    <delete id="deleteInviteByIds" parameterType="String">
+        delete from invite_codes where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

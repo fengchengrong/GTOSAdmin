@@ -23,12 +23,12 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 用户信息Controller
- *
+ * 
  * @author fengcr
- * @date 2024-06-14
+ * @date 2024-06-15
  */
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/gtos/users")
 public class UsersController extends BaseController
 {
     @Autowired
@@ -37,7 +37,7 @@ public class UsersController extends BaseController
     /**
      * 查询用户信息列表
      */
-    @PreAuthorize("@ss.hasPermi('users:list')")
+    @PreAuthorize("@ss.hasPermi('gtos:users:list')")
     @GetMapping("/list")
     public TableDataInfo list(Users users)
     {
@@ -49,7 +49,7 @@ public class UsersController extends BaseController
     /**
      * 导出用户信息列表
      */
-    @PreAuthorize("@ss.hasPermi('users:export')")
+    @PreAuthorize("@ss.hasPermi('gtos:users:export')")
     @Log(title = "用户信息", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, Users users)
@@ -62,17 +62,17 @@ public class UsersController extends BaseController
     /**
      * 获取用户信息详细信息
      */
-    @PreAuthorize("@ss.hasPermi('users:query')")
-    @GetMapping(value = "/{phoneNumber}")
-    public AjaxResult getInfo(@PathVariable("phoneNumber") String phoneNumber)
+    @PreAuthorize("@ss.hasPermi('gtos:users:query')")
+    @GetMapping(value = "/{id}")
+    public AjaxResult getInfo(@PathVariable("id") Long id)
     {
-        return success(usersService.selectUsersByPhoneNumber(phoneNumber));
+        return success(usersService.selectUsersById(id));
     }
 
     /**
      * 新增用户信息
      */
-    @PreAuthorize("@ss.hasPermi('users:add')")
+    @PreAuthorize("@ss.hasPermi('gtos:users:add')")
     @Log(title = "用户信息", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Users users)
@@ -83,7 +83,7 @@ public class UsersController extends BaseController
     /**
      * 修改用户信息
      */
-    @PreAuthorize("@ss.hasPermi('users:edit')")
+    @PreAuthorize("@ss.hasPermi('gtos:users:edit')")
     @Log(title = "用户信息", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Users users)
@@ -94,11 +94,11 @@ public class UsersController extends BaseController
     /**
      * 删除用户信息
      */
-    @PreAuthorize("@ss.hasPermi('users:remove')")
+    @PreAuthorize("@ss.hasPermi('gtos:users:remove')")
     @Log(title = "用户信息", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{phoneNumbers}")
-    public AjaxResult remove(@PathVariable String[] phoneNumbers)
+	@DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Long[] ids)
     {
-        return toAjax(usersService.deleteUsersByPhoneNumbers(phoneNumbers));
+        return toAjax(usersService.deleteUsersByIds(ids));
     }
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="手机号" prop="userName">
+      <el-form-item label="手机号" prop="phoneNumber">
         <el-input
           v-model="queryParams.phoneNumber"
           placeholder="请输入手机号"
@@ -17,14 +17,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-<!--      <el-form-item label="密码" prop="password">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.password"-->
-<!--          placeholder="请输入密码"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
+      <el-form-item label="密码" prop="password">
+        <el-input
+          v-model="queryParams.password"
+          placeholder="请输入密码"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="是否邀请" prop="isInvite">
         <el-select v-model="queryParams.isInvite" placeholder="请选择是否邀请" clearable>
           <el-option
@@ -35,30 +35,39 @@
           />
         </el-select>
       </el-form-item>
-<!--      <el-form-item label="注册日期" prop="registerTime">-->
-<!--        <el-date-picker clearable-->
-<!--          v-model="queryParams.registerTime"-->
-<!--          type="date"-->
-<!--          value-format="yyyy-MM-dd"-->
-<!--          placeholder="请选择注册日期">-->
-<!--        </el-date-picker>-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="上次登录时间" prop="lastLoginTime">-->
-<!--        <el-date-picker clearable-->
-<!--          v-model="queryParams.lastLoginTime"-->
-<!--          type="date"-->
-<!--          value-format="yyyy-MM-dd"-->
-<!--          placeholder="请选择上次登录时间">-->
-<!--        </el-date-picker>-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="有效期" prop="vipTime">-->
-<!--        <el-date-picker clearable-->
-<!--          v-model="queryParams.vipTime"-->
-<!--          type="date"-->
-<!--          value-format="yyyy-MM-dd"-->
-<!--          placeholder="请选择有效期">-->
-<!--        </el-date-picker>-->
-<!--      </el-form-item>-->
+      <el-form-item label="注册日期">
+        <el-date-picker
+          v-model="daterangeRegisterTime"
+          style="width: 240px"
+          value-format="yyyy-MM-dd"
+          type="daterange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+        ></el-date-picker>
+      </el-form-item>
+      <el-form-item label="上次登录">
+        <el-date-picker
+          v-model="daterangeLastLoginTime"
+          style="width: 240px"
+          value-format="yyyy-MM-dd"
+          type="daterange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+        ></el-date-picker>
+      </el-form-item>
+      <el-form-item label="有效期">
+        <el-date-picker
+          v-model="daterangeVipTime"
+          style="width: 240px"
+          value-format="yyyy-MM-dd"
+          type="daterange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+        ></el-date-picker>
+      </el-form-item>
       <el-form-item label="所属代理" prop="inviteCode">
         <el-input
           v-model="queryParams.inviteCode"
@@ -77,6 +86,14 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="付费金额" prop="moneys">
+        <el-input
+          v-model="queryParams.moneys"
+          placeholder="请输入付费金额"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -91,7 +108,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['users:add']"
+          v-hasPermi="['gtos:users:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -102,7 +119,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['users:edit']"
+          v-hasPermi="['gtos:users:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -113,7 +130,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['users:remove']"
+          v-hasPermi="['gtos:users:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -123,7 +140,7 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['users:export']"
+          v-hasPermi="['gtos:users:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -131,7 +148,8 @@
 
     <el-table v-loading="loading" :data="usersList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="手机号" align="center" prop="phoneNumber" />
+<!--      <el-table-column label="编号" align="center" prop="id" />-->
+      <el-table-column label="手机号" align="center" prop="phoneNumber" width="110%"/>
       <el-table-column label="用户名" align="center" prop="userName" />
 <!--      <el-table-column label="密码" align="center" prop="password" />-->
       <el-table-column label="是否邀请" align="center" prop="isInvite">
@@ -144,11 +162,11 @@
           <span>{{ parseTime(scope.row.registerTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-<!--      <el-table-column label="上次登录时间" align="center" prop="lastLoginTime" width="180">-->
-<!--        <template slot-scope="scope">-->
-<!--          <span>{{ parseTime(scope.row.lastLoginTime, '{y}-{m}-{d}') }}</span>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
+      <el-table-column label="上次登录" align="center" prop="lastLoginTime" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.lastLoginTime, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="有效期" align="center" prop="vipTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.vipTime, '{y}-{m}-{d}') }}</span>
@@ -168,14 +186,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['users:edit']"
+            v-hasPermi="['gtos:users:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['users:remove']"
+            v-hasPermi="['gtos:users:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -198,9 +216,9 @@
         <el-form-item label="用户名" prop="userName">
           <el-input v-model="form.userName" placeholder="请输入用户名" />
         </el-form-item>
-<!--        <el-form-item label="密码" prop="password">-->
-<!--          <el-input v-model="form.password" placeholder="请输入密码" />-->
-<!--        </el-form-item>-->
+        <el-form-item label="密码" prop="password">
+          <el-input v-model="form.password" placeholder="请输入密码" />
+        </el-form-item>
         <el-form-item label="是否邀请" prop="isInvite">
           <el-radio-group v-model="form.isInvite">
             <el-radio
@@ -218,7 +236,7 @@
             placeholder="请选择注册日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="上次登录时间" prop="lastLoginTime">
+        <el-form-item label="上次登录" prop="lastLoginTime">
           <el-date-picker clearable
             v-model="form.lastLoginTime"
             type="date"
@@ -247,6 +265,9 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="付费金额" prop="moneys">
+          <el-input v-model="form.moneys" placeholder="请输入付费金额" />
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -257,7 +278,7 @@
 </template>
 
 <script>
-import { listUsers, getUsers, delUsers, addUsers, updateUsers } from "@/api/users/users";
+import { listUsers, getUsers, delUsers, addUsers, updateUsers } from "@/api/gtos/users";
 
 export default {
   name: "Users",
@@ -282,11 +303,17 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      // 付费金额时间范围
+      daterangeRegisterTime: [],
+      // 付费金额时间范围
+      daterangeLastLoginTime: [],
+      // 付费金额时间范围
+      daterangeVipTime: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        phoneNumber:null,
+        phoneNumber: null,
         userName: null,
         password: null,
         isInvite: null,
@@ -313,21 +340,9 @@ export default {
         isInvite: [
           { required: true, message: "是否邀请不能为空", trigger: "change" }
         ],
-        registerTime: [
-          { required: true, message: "注册日期不能为空", trigger: "blur" }
-        ],
-        lastLoginTime: [
-          { required: true, message: "上次登录时间不能为空", trigger: "blur" }
-        ],
-        vipTime: [
-          { required: true, message: "有效期不能为空", trigger: "blur" }
-        ],
         permissions: [
           { required: true, message: "权限不能为空", trigger: "change" }
         ],
-        moneys: [
-          { required: true, message: "付费金额不能为空", trigger: "blur" }
-        ]
       }
     };
   },
@@ -338,6 +353,19 @@ export default {
     /** 查询用户信息列表 */
     getList() {
       this.loading = true;
+      this.queryParams.params = {};
+      if (null != this.daterangeRegisterTime && '' != this.daterangeRegisterTime) {
+        this.queryParams.params["beginRegisterTime"] = this.daterangeRegisterTime[0];
+        this.queryParams.params["endRegisterTime"] = this.daterangeRegisterTime[1];
+      }
+      if (null != this.daterangeLastLoginTime && '' != this.daterangeLastLoginTime) {
+        this.queryParams.params["beginLastLoginTime"] = this.daterangeLastLoginTime[0];
+        this.queryParams.params["endLastLoginTime"] = this.daterangeLastLoginTime[1];
+      }
+      if (null != this.daterangeVipTime && '' != this.daterangeVipTime) {
+        this.queryParams.params["beginVipTime"] = this.daterangeVipTime[0];
+        this.queryParams.params["endVipTime"] = this.daterangeVipTime[1];
+      }
       listUsers(this.queryParams).then(response => {
         this.usersList = response.rows;
         this.total = response.total;
@@ -352,6 +380,7 @@ export default {
     // 表单重置
     reset() {
       this.form = {
+        id: null,
         phoneNumber: null,
         userName: null,
         password: null,
@@ -372,12 +401,15 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
+      this.daterangeRegisterTime = [];
+      this.daterangeLastLoginTime = [];
+      this.daterangeVipTime = [];
       this.resetForm("queryForm");
       this.handleQuery();
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.phoneNumber)
+      this.ids = selection.map(item => item.id)
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
@@ -390,8 +422,8 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const phoneNumber = row.phoneNumber || this.ids
-      getUsers(phoneNumber).then(response => {
+      const id = row.id || this.ids
+      getUsers(id).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改用户信息";
@@ -401,7 +433,7 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.phoneNumber != null) {
+          if (this.form.id != null) {
             updateUsers(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
@@ -419,9 +451,9 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const phoneNumbers = row.phoneNumber || this.ids;
-      this.$modal.confirm('是否确认删除用户信息编号为"' + phoneNumbers + '"的数据项？').then(function() {
-        return delUsers(phoneNumbers);
+      const ids = row.id || this.ids;
+      this.$modal.confirm('是否确认删除用户信息编号为"' + ids + '"的数据项？').then(function() {
+        return delUsers(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -429,7 +461,7 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('users/users/export', {
+      this.download('gtos/users/export', {
         ...this.queryParams
       }, `users_${new Date().getTime()}.xlsx`)
     }
