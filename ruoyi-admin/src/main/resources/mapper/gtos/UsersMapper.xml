@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.users.mapper.UsersMapper">
-    
+
     <resultMap type="Users" id="UsersResult">
         <result property="id"    column="id"    />
         <result property="phoneNumber"    column="phone_number"    />
@@ -24,7 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectUsersList" parameterType="Users" resultMap="UsersResult">
         <include refid="selectUsersVo"/>
-        <where>  
+        <where>
             <if test="phoneNumber != null  and phoneNumber != ''"> and phone_number like concat('%', #{phoneNumber}, '%')</if>
             <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
             <if test="password != null  and password != ''"> and password = #{password}</if>
@@ -37,7 +37,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="moneys != null  and moneys != ''"> and moneys = #{moneys}</if>
         </where>
     </select>
-    
+
     <select id="selectUsersById" parameterType="Long" resultMap="UsersResult">
         <include refid="selectUsersVo"/>
         where id = #{id}
@@ -93,9 +93,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteUsersByIds" parameterType="String">
-        delete from users where id in 
+        delete from users where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
+
+    <select id="statisticsData" resultType="Statistics">
+        SELECT
+            COUNT(*) AS total_user_count,
+            COUNT(CASE WHEN moneys > 0 THEN 1 END) AS pay_user_count,
+            SUM(moneys) AS total_pay
+        FROM
+            users
+    </select>
+
 </mapper>

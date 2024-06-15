@@ -1,6 +1,8 @@
 package com.ruoyi.users.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.statistics.domain.Statistics;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.users.mapper.UsersMapper;
@@ -9,19 +11,19 @@ import com.ruoyi.users.service.IUsersService;
 
 /**
  * 用户信息Service业务层处理
- * 
+ *
  * @author fengcr
  * @date 2024-06-15
  */
 @Service
-public class UsersServiceImpl implements IUsersService 
+public class UsersServiceImpl implements IUsersService
 {
     @Autowired
     private UsersMapper usersMapper;
 
     /**
      * 查询用户信息
-     * 
+     *
      * @param id 用户信息主键
      * @return 用户信息
      */
@@ -33,7 +35,7 @@ public class UsersServiceImpl implements IUsersService
 
     /**
      * 查询用户信息列表
-     * 
+     *
      * @param users 用户信息
      * @return 用户信息
      */
@@ -45,7 +47,7 @@ public class UsersServiceImpl implements IUsersService
 
     /**
      * 新增用户信息
-     * 
+     *
      * @param users 用户信息
      * @return 结果
      */
@@ -57,7 +59,7 @@ public class UsersServiceImpl implements IUsersService
 
     /**
      * 修改用户信息
-     * 
+     *
      * @param users 用户信息
      * @return 结果
      */
@@ -69,7 +71,7 @@ public class UsersServiceImpl implements IUsersService
 
     /**
      * 批量删除用户信息
-     * 
+     *
      * @param ids 需要删除的用户信息主键
      * @return 结果
      */
@@ -81,7 +83,7 @@ public class UsersServiceImpl implements IUsersService
 
     /**
      * 删除用户信息信息
-     * 
+     *
      * @param id 用户信息主键
      * @return 结果
      */
@@ -89,5 +91,10 @@ public class UsersServiceImpl implements IUsersService
     public int deleteUsersById(Long id)
     {
         return usersMapper.deleteUsersById(id);
+    }
+
+    @Override
+    public Statistics statisticsData() {
+        return usersMapper.statisticsData();
     }
 }
