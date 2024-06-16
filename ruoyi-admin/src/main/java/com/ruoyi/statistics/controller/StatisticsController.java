@@ -6,12 +6,15 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.invite.service.IInviteService;
+import com.ruoyi.statistics.domain.Statistics;
 import com.ruoyi.users.service.IUsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * 用户信息Controller
@@ -35,6 +38,16 @@ public class StatisticsController extends BaseController {
     @PostMapping("/select_main_info")
     public AjaxResult countUsers() {
         return success(usersService.statisticsData());
+    }
+
+    @PreAuthorize("@ss.hasPermi('gtos:statistics:list')")
+    @PostMapping("/count_hourly_register_chart")
+    public AjaxResult countHourlyRegisterChart(@RequestBody Statistics statistics) {
+//        System.out.println(statistics.getDateValue());
+//        Date date = new Date();
+        SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd" );
+        String dateStr = sdf.format(statistics.getDateValue());
+        return success(usersService.countHourlyRegisterChart(dateStr));
     }
 
     /**

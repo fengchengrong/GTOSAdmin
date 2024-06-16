@@ -1,7 +1,10 @@
 package com.ruoyi.users.service;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+import com.ruoyi.statistics.domain.HourlyCountStatistics;
 import com.ruoyi.statistics.domain.Statistics;
 import com.ruoyi.users.domain.Users;
 
@@ -62,4 +65,6 @@ public interface IUsersService
     public int deleteUsersById(Long id);
 
     public Statistics statisticsData();
+
+    public List<HourlyCountStatistics> countHourlyRegisterChart(String date);
 }

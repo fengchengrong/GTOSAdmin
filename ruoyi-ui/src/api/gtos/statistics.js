@@ -50,6 +50,7 @@ export function getOperate() {
     method: 'post'
   })
 }
+
 // 获取用户列表
 export function getUserInfo(params) {
   return request({
@@ -65,4 +66,12 @@ export function getInviteInfo(params) {
     method: 'post',
     data: params
   })
+}
+
+export function countHourlyRegisterChart(params){
+  return request({
+      url: '/gtos/statistics/count_hourly_register_chart',
+      method: 'post',
+      data: params
+    })
 }

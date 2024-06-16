@@ -122,13 +122,15 @@
       <div class="block">
         <span class="demonstration">日期:</span>&nbsp;
         <el-date-picker
-          v-model="value2"
+          v-model="dateValue"
           type="date"
-          placeholder="选择日期">
+          format="yyyy-MM-dd"
+          value-format="yyyy-MM-dd"
+          placeholder="选择日期" @change="changeChart">
         </el-date-picker>
       </div>
       <div style="margin-top: -15px;height: 430px;" v-if="showChart">
-        <ve-line :data="lineData2" ref="chart" :width="lineWidth" :height="lineHeight"></ve-line>
+        <ve-line :data="lineData" ref="chart" :width="lineWidth" :height="lineHeight"></ve-line>
       </div>
       <div style="text-align: center;line-height: 335px;" v-else>
         <span style="color: gray">暂无数据</span>
@@ -140,7 +142,7 @@
 
 <script>
 import CountTo from 'vue-count-to'
-import { getOperate } from '@/api/gtos/statistics'
+import {countHourlyRegisterChart, getOperate} from '@/api/gtos/statistics'
 export default {
   components: {
     CountTo
@@ -169,9 +171,9 @@ export default {
         label: '2024',
         value: 2
       }],
-      value2: '',
+      dateValue: '',
       value1: [new Date(2024, 1, 10, 10, 10), new Date(2024, 6, 11, 10, 10)],
-      lineData: {
+      lineData2: {
         columns: ['时间', '注册人数'],
         rows: [
           { '时间': '一月', '注册人数': 263 },
@@ -182,33 +184,34 @@ export default {
           { '时间': '六月', '注册人数': 235 },
         ]
       },
-      lineData2: {
-        columns: ['时间', '访问量'],
+      map:{},
+      lineData: {
+        columns: ['时间', '注册量'],
         rows: [
-          { '时间': '0', '访问量': 2 },
-          { '时间': '1', '访问量': 4 },
-          { '时间': '2', '访问量': 5 },
-          { '时间': '3', '访问量': 7 },
-          { '时间': '4', '访问量': 3 },
-          { '时间': '5', '访问量': 5 },
-          { '时间': '6', '访问量': 34 },
-          { '时间': '7', '访问量': 45 },
-          { '时间': '8', '访问量': 47 },
-          { '时间': '9', '访问量': 48 },
-          { '时间': '10', '访问量': 57 },
-          { '时间': '11', '访问量': 57 },
-          { '时间': '12', '访问量': 68 },
-          { '时间': '13', '访问量': 80 },
-          { '时间': '14', '访问量': 80 },
-          { '时间': '15', '访问量': 90 },
-          { '时间': '16', '访问量': 212 },
-          { '时间': '17', '访问量': 300 },
-          { '时间': '18', '访问量': 432 },
-          { '时间': '19', '访问量': 123 },
-          { '时间': '20', '访问量': 100 },
-          { '时间': '21', '访问量': 56 },
-          { '时间': '22', '访问量': 32 },
-          { '时间': '23', '访问量': 3 },
+          { '时间': '0', '注册量': 0 },
+          { '时间': '1', '注册量': 0 },
+          { '时间': '2', '注册量': 0 },
+          { '时间': '3', '注册量': 0 },
+          { '时间': '4', '注册量': 0 },
+          { '时间': '5', '注册量': 0 },
+          { '时间': '6', '注册量': 0 },
+          { '时间': '7', '注册量': 0 },
+          { '时间': '8', '注册量': 0 },
+          { '时间': '9', '注册量': 0 },
+          { '时间': '10', '注册量': 0 },
+          { '时间': '11', '注册量': 0 },
+          { '时间': '12', '注册量': 0 },
+          { '时间': '13', '注册量': 0 },
+          { '时间': '14', '注册量': 0 },
+          { '时间': '15', '注册量': 0 },
+          { '时间': '16', '注册量': 0 },
+          { '时间': '17', '注册量': 0 },
+          { '时间': '18', '注册量': 0 },
+          { '时间': '19', '注册量': 0 },
+          { '时间': '20', '注册量': 0 },
+          { '时间': '21', '注册量': 0 },
+          { '时间': '22', '注册量': 0 },
+          { '时间': '23', '注册量': 0 },
         ]
       }
     }
@@ -219,13 +222,34 @@ export default {
     }
     // 获取代理商信息
     getOperate().then((res) => {
-      console.log('reszz', res)
+      // console.log('reszz', res)
       this.userInfo = res.data
     })
   },
   methods: {
     handleSetLineChartData(type) {
       this.$emit('handleSetLineChartData', type)
+    },
+    changeChart(){
+      this.getChartData();
+    },
+    getChartData(){
+      let body = {};
+      body.dateValue = this.dateValue;
+      countHourlyRegisterChart(body).then((res) => {
+        let hourlyRegisterMap = res.data
+        if(hourlyRegisterMap){
+          this.lineData.rows = hourlyRegisterMap.map(item => {
+            let obj = {
+              '时间': item.hour,
+              '注册量': item.count
+            };
+            return obj
+          });
+        }
+
+
+      })
     }
   }
 }

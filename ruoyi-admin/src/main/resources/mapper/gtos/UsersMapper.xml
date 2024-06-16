@@ -108,4 +108,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             users
     </select>
 
+    <select id="countHourlyRegisterChart" parameterType="String" resultMap="UsersResult">
+        SELECT *
+        FROM users WHERE register_time like concat('%', #{registerTime}, '%')
+    </select>
+
 </mapper>

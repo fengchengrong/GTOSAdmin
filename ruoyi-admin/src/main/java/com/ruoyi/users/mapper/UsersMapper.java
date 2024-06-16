@@ -1,5 +1,6 @@
 package com.ruoyi.users.mapper;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -63,4 +64,6 @@ public interface UsersMapper
     public int deleteUsersByIds(Long[] ids);
 
     public Statistics statisticsData();
+
+    public List<Users> countHourlyRegisterChart(String registerTime);
 }

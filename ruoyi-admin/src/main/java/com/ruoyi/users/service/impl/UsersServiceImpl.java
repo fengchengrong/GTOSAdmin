@@ -1,7 +1,8 @@
 package com.ruoyi.users.service.impl;
 
-import java.util.List;
+import java.util.*;
 
+import com.ruoyi.statistics.domain.HourlyCountStatistics;
 import com.ruoyi.statistics.domain.Statistics;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,8 @@ public class UsersServiceImpl implements IUsersService
 {
     @Autowired
     private UsersMapper usersMapper;
+
+
 
     /**
      * 查询用户信息
@@ -97,4 +100,31 @@ public class UsersServiceImpl implements IUsersService
     public Statistics statisticsData() {
         return usersMapper.statisticsData();
     }
+
+    @Override
+    public List<HourlyCountStatistics> countHourlyRegisterChart(String date) {
+        List<Users> users = usersMapper.countHourlyRegisterChart(date);
+        List<HourlyCountStatistics> countHourlyList = new ArrayList<>();
+        this.initData(countHourlyList);
+        for (Users user : users) {
+            // 获取注册时间的小时数
+            int hour = user.getRegisterTime().getHours();
+            for (int i = 0; i < countHourlyList.size(); i++) {
+                // 判断小时数是否相等
+                if (countHourlyList.get(i).getHour() == hour) {
+                    countHourlyList.get(i).setCount(countHourlyList.get(i).getCount() + 1);
+                    break;
+                }
+            }
+        }
+        return countHourlyList;
+    }
+
+    private void initData(List<HourlyCountStatistics> countHourlyList) {
+        for (int i = 0; i < 24; i++) {
+            countHourlyList.add(new HourlyCountStatistics(i, 0));
+        }
+    }
+
+
 }
