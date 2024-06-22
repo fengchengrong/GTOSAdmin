@@ -36,6 +36,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="permissions != null  and permissions != ''"> and permissions = #{permissions}</if>
             <if test="moneys != null  and moneys != ''"> and moneys = #{moneys}</if>
         </where>
+        order by register_time desc
     </select>
 
     <select id="selectUsersById" parameterType="Long" resultMap="UsersResult">
