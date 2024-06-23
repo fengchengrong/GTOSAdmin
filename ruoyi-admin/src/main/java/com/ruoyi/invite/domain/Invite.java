@@ -7,7 +7,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
  * 代理信息对象 invite_codes
- * 
+ *
  * @author fengcr
  * @date 2024-06-15
  */
@@ -44,79 +44,78 @@ public class Invite extends BaseEntity
 
     /** 支付比例 */
     @Excel(name = "支付比例")
-    private Long ratio;
+    private Double ratio;
 
-    public void setId(Long id) 
+    public void setId(Long id)
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public Long getId()
     {
         return id;
     }
-    public void setInviteCode(String inviteCode) 
+    public void setInviteCode(String inviteCode)
     {
         this.inviteCode = inviteCode;
     }
 
-    public String getInviteCode() 
+    public String getInviteCode()
     {
         return inviteCode;
     }
-    public void setPhone(String phone) 
+    public void setPhone(String phone)
     {
         this.phone = phone;
     }
 
-    public String getPhone() 
+    public String getPhone()
     {
         return phone;
     }
-    public void setUsedCount(Long usedCount) 
+    public void setUsedCount(Long usedCount)
     {
         this.usedCount = usedCount;
     }
 
-    public Long getUsedCount() 
+    public Long getUsedCount()
     {
         return usedCount;
     }
-    public void setMoneys(String moneys) 
+    public void setMoneys(String moneys)
     {
         this.moneys = moneys;
     }
 
-    public String getMoneys() 
+    public String getMoneys()
     {
         return moneys;
     }
-    public void setMonthMoneys(String monthMoneys) 
+    public void setMonthMoneys(String monthMoneys)
     {
         this.monthMoneys = monthMoneys;
     }
 
-    public String getMonthMoneys() 
+    public String getMonthMoneys()
     {
         return monthMoneys;
     }
-    public void setCollectMoneys(String collectMoneys) 
+    public void setCollectMoneys(String collectMoneys)
     {
         this.collectMoneys = collectMoneys;
     }
 
-    public String getCollectMoneys() 
+    public String getCollectMoneys()
     {
         return collectMoneys;
     }
-    public void setRatio(Long ratio) 
-    {
-        this.ratio = ratio;
+
+    public Double getRatio() {
+        return ratio;
     }
 
-    public Long getRatio() 
-    {
-        return ratio;
+    public void setRatio(Double ratio) {
+        this.ratio = ratio;
     }
 
     @Override

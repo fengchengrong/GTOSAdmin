@@ -149,36 +149,40 @@
     <el-table v-loading="loading" :data="usersList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
 <!--      <el-table-column label="编号" align="center" prop="id" />-->
-      <el-table-column label="手机号" align="center" prop="phoneNumber" width="110%"/>
-      <el-table-column label="用户名" align="center" prop="userName" />
+      <el-table-column label="手机号" align="center" prop="phoneNumber" width="110%" sortable/>
+      <el-table-column label="用户名" align="center" prop="userName"  sortable/>
 <!--      <el-table-column label="密码" align="center" prop="password" />-->
-      <el-table-column label="是否邀请" align="center" prop="isInvite">
+      <el-table-column label="是否邀请" align="center" prop="isInvite" sortable>
         <template slot-scope="scope">
           <dict-tag :options="dict.type.yes_no" :value="scope.row.isInvite"/>
         </template>
       </el-table-column>
-      <el-table-column label="注册日期" align="center" prop="registerTime" width="180">
+      <el-table-column label="注册日期" align="center" prop="registerTime" width="180" sortable>
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.registerTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="上次登录" align="center" prop="lastLoginTime" width="180">
+      <el-table-column label="上次登录" align="center" prop="lastLoginTime" width="180" sortable>
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.lastLoginTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="有效期" align="center" prop="vipTime" width="180">
+      <el-table-column label="有效期" align="center" prop="vipTime" width="180" sortable>
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.vipTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="所属代理" align="center" prop="inviteCode" />
-      <el-table-column label="权限" align="center" prop="permissions">
+      <el-table-column label="所属代理" align="center" prop="inviteCode" sortable/>
+      <el-table-column label="权限" align="center" prop="permissions" sortable>
         <template slot-scope="scope">
           <dict-tag :options="dict.type.permission" :value="scope.row.permissions"/>
         </template>
       </el-table-column>
-      <el-table-column label="付费金额" align="center" prop="moneys" />
+      <el-table-column label="付费金额" align="center" prop="moneys" sortable>
+        <template slot-scope="scope">
+          <span style="margin-left: 10px">{{ `￥`+(scope.row.moneys/100).toFixed(2) }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button

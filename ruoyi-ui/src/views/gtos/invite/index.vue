@@ -123,18 +123,34 @@
     <el-table v-loading="loading" :data="inviteList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
 <!--      <el-table-column label="编号" align="center" prop="id" />-->
-      <el-table-column label="代理编号" align="center" prop="inviteCode" />
-      <el-table-column label="代理电话" align="center" prop="phone" />
-      <el-table-column label="创建时间" align="center" prop="createTime" width="180">
+      <el-table-column label="代理编号" align="center" prop="inviteCode" sortable />
+      <el-table-column label="代理电话" align="center" prop="phone" sortable/>
+      <el-table-column label="创建时间" align="center" prop="createTime" width="180" sortable>
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="用户数量" align="center" prop="usedCount" />
-      <el-table-column label="总收益" align="center" prop="moneys" />
-      <el-table-column label="月收益" align="center" prop="monthMoneys" />
-      <el-table-column label="未付金额" align="center" prop="collectMoneys" />
-      <el-table-column label="支付比例" align="center" prop="ratio" />
+      <el-table-column label="用户数量" align="center" prop="usedCount" sortable/>
+      <el-table-column label="总收益" align="center" prop="moneys" :formatter="moneyFormat" sortable>
+        <template slot-scope="scope">
+          <span style="margin-left: 10px">{{ `￥`+(scope.row.moneys/100).toFixed(2) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="月收益" align="center" prop="monthMoneys" sortable>
+        <template slot-scope="scope">
+          <span style="margin-left: 10px">{{ `￥`+(scope.row.monthMoneys/100).toFixed(2) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="未付金额" align="center" prop="collectMoneys" sortable>
+        <template slot-scope="scope">
+          <span style="margin-left: 10px">{{ `￥`+(scope.row.collectMoneys/100).toFixed(2) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="支付比例" align="center" prop="ratio" sortable>
+        <template slot-scope="scope">
+          <span style="margin-left: 10px">{{ scope.row.ratio*100 }}%</span>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
