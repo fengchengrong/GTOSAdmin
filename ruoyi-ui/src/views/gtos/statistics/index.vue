@@ -135,20 +135,30 @@
       <div style="text-align: center;line-height: 335px;" v-else>
         <span style="color: gray">暂无数据</span>
       </div>
+
     </el-card>
+<!--      <el-card :body-style="{ padding: '0px' }">-->
+<!--        <div class="card-body-left">-->
+<!--          <div class="left-title">今日{{ this.hour }}时访问数量</div>-->
+<!--          <div class="left-count" id="visitsUsers">{{ this.count }}</div>-->
+<!--        </div>-->
+<!--        <div class="card-body-right" id="myChart3"></div>-->
+<!--      </el-card>-->
   </el-row>
 </div>
 </template>
 
 <script>
 import CountTo from 'vue-count-to'
-import {countHourlyRegisterChart, getOperate} from '@/api/gtos/statistics'
+import {countHourlyRegisterChart, getOperate, visitPage, getVisitUserNum} from '@/api/gtos/statistics'
 export default {
   components: {
     CountTo
   },
   data() {
     return {
+      count: 0,
+      hour: '',
       used_count: 0,
       moneys: 0,
       isPermission: 2,
@@ -224,6 +234,12 @@ export default {
     getOperate().then((res) => {
       // console.log('reszz', res)
       this.userInfo = res.data
+    })
+    getVisitUserNum().then((res) =>{
+      if(res.msg){
+        this.count = Number(res.msg.substring(3))
+        this.hour = res.msg.substring(0,2);
+      }
     })
   },
   methods: {

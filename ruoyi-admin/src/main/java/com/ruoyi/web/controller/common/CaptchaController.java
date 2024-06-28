@@ -6,7 +6,13 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.constant.RedisParamConstants;
+import com.ruoyi.common.utils.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.FastByteArrayOutputStream;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,12 +28,13 @@ import com.ruoyi.system.service.ISysConfigService;
 
 /**
  * 验证码操作处理
- * 
+ *
  * @author ruoyi
  */
 @RestController
 public class CaptchaController
 {
+    private static final Logger logger = LoggerFactory.getLogger("sys-user");
     @Resource(name = "captchaProducer")
     private Producer captchaProducer;
 
@@ -36,9 +43,12 @@ public class CaptchaController
 
     @Autowired
     private RedisCache redisCache;
-    
+
     @Autowired
     private ISysConfigService configService;
+
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
     /**
      * 生成验证码
      */
@@ -90,5 +100,18 @@ public class CaptchaController
         ajax.put("uuid", uuid);
         ajax.put("img", Base64.encode(os.toByteArray()));
         return ajax;
+    }
+
+    @GetMapping("/visit_page")
+    public AjaxResult visitPage() {
+        String nowDate = DateUtils.dateTimeNow("yyyyMMddHH");
+        String countStr = redisTemplate.opsForValue().get(RedisParamConstants.VISIT_COUNT+nowDate);
+
+        if (countStr == null) {
+            redisTemplate.opsForValue().set(RedisParamConstants.VISIT_COUNT+nowDate, "1");
+        } else {
+            redisTemplate.opsForValue().increment(RedisParamConstants.VISIT_COUNT+nowDate);
+        }
+        return AjaxResult.success();
     }
 }

@@ -1,14 +1,18 @@
 package com.ruoyi.statistics.controller;
 
 import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.constant.RedisParamConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.invite.service.IInviteService;
 import com.ruoyi.statistics.domain.Statistics;
 import com.ruoyi.users.service.IUsersService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.ListOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +31,11 @@ import java.util.Date;
 public class StatisticsController extends BaseController {
     @Autowired
     private IUsersService usersService;
+
+//    @Autowired
+//    private RedisTemplate<String, Object> redisTemplate;
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
 
     @Autowired
     private IInviteService inviteService;
@@ -66,6 +75,31 @@ public class StatisticsController extends BaseController {
     @GetMapping("/select_invite_info")
     public TableDataInfo countMoney() {
         return null;
+    }
+
+    @GetMapping("/get_visit_user_num")
+    public AjaxResult getVisitUserNum() {
+        String nowDate = DateUtils.dateTimeNow("yyyyMMddHH");
+        String hour = nowDate.substring(8, 10);
+        String countStr = redisTemplate.opsForValue().get(RedisParamConstants.VISIT_COUNT+nowDate);
+        return success(hour + ":"+ countStr);
+    }
+
+    @GetMapping("/visit_page")
+    public AjaxResult visitPage() {
+        String nowDate = DateUtils.dateTimeNow("yyyyMMddHH");
+        String countStr = redisTemplate.opsForValue().get(nowDate);
+
+        if (countStr == null) {
+            redisTemplate.opsForValue().set(nowDate, "1");
+        } else {
+            redisTemplate.opsForValue().increment(nowDate);
+        }
+
+//        ListOperations<String, String> list = redisTemplate.opsForList();
+//        Long size = list.size(RedisParamConstants.VISIT_COUNT + nowDate);
+//        list.leftPush(RedisParamConstants.VISIT_COUNT+nowDate, "123");
+        return success();
     }
 
 }

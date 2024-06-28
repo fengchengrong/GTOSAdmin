@@ -75,3 +75,11 @@ export function countHourlyRegisterChart(params){
       data: params
     })
 }
+
+// 获取访问量
+export function getVisitUserNum() {
+  return request({
+    url: '/gtos/statistics/get_visit_user_num',
+    method: 'get'
+  })
+}
